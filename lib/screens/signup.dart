@@ -9,6 +9,13 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool _passwordVisible = false;
+  final formKey = GlobalKey<FormState>();
+  TextEditingController username = TextEditingController();
+  TextEditingController fullname = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController referral = TextEditingController();
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +79,63 @@ class _SignupScreenState extends State<SignupScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            'Referral (Optional)',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(fontSize: 14),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: referral,
+                            onChanged: (v) {},
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                                fontFamily: 'Poppins'),
+                            decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              hintText: 'Loincoin',
+                              hintStyle: TextStyle(
+                                color: Colors.white70,
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent)),
+                              errorStyle: TextStyle(color: Colors.white70),
+                              fillColor: Color(0xFF232835),
+                              filled: true,
+                            ),
+                            autocorrect: false,
+                            autofocus: false,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             'Username',
                             style: Theme.of(context)
                                 .textTheme
@@ -82,6 +146,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: username,
                             validator: (username) {
                               if (username.isEmpty)
                                 return 'Username Field is required';
@@ -144,6 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: fullname,
                             validator: (fullname) {
                               if (fullname.isEmpty)
                                 return 'Fullname Field is required';
@@ -206,6 +272,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: email,
                             validator: (email) {
                               if (email.isEmpty)
                                 return 'Email Address Field is required';
@@ -268,6 +335,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: mobile,
                             validator: (phone) {
                               if (phone.isEmpty)
                                 return 'Phone number Field is required';
@@ -330,6 +398,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: password,
                             validator: (password) {
                               if (password.isEmpty)
                                 return 'Password Field is required';
@@ -405,6 +474,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     MaterialButton(
                       onPressed: () async {
+                        if (!formKey.currentState.validate()) {
+                          return;
+                        }
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return HomeScreen();

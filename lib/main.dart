@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.black,
           scaffoldBackgroundColor: Colors.black,
           iconTheme: IconThemeData(color: Colors.white, size: 18),
+          dividerColor: Colors.white,
           textTheme: TextTheme(
             headline1: TextStyle(color: Colors.white, fontFamily: "Poppins"),
             headline2: TextStyle(color: Colors.white, fontFamily: "Poppins"),
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           backgroundColor: Colors.white,
+          dividerColor: Colors.black,
           iconTheme: IconThemeData(color: Colors.black, size: 18),
           textTheme: TextTheme(
             headline1: TextStyle(color: Colors.black, fontFamily: "Poppins"),

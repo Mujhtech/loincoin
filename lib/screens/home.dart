@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:loincoin/widgets/bottom_button.dart';
+import 'package:loincoin/widgets/top_button.dart';
 import 'package:loincoin/widgets/user_profile_image.dart';
 import 'package:loincoin/widgets/user_balance.dart';
+import 'package:loincoin/widgets/transaction_card.dart';
+import 'package:loincoin/constants.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -40,7 +43,17 @@ class HomeScreen extends StatelessWidget {
       body: Stack(children: [
         ListView(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 120.0),
-          children: [UserBalance()],
+          children: [
+            UserBalance(),
+            TopBtn(),
+            const SizedBox(height: 12.0),
+            Text(
+              'Transactions',
+              style:
+                  Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
+            ),
+            ...transactionList.map((e) => TransactionCard(data: e)),
+          ],
         ),
         Positioned(
           left: 0,

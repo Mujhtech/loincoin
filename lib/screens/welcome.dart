@@ -9,6 +9,9 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool _passwordVisible = false;
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             height: 20,
           ),
           Form(
+            key: formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -82,6 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: username,
                             validator: (username) {
                               if (username.isEmpty)
                                 return 'Username Field is required';
@@ -144,6 +149,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             height: 10,
                           ),
                           TextFormField(
+                            controller: password,
                             validator: (password) {
                               if (password.isEmpty)
                                 return 'Password Field is required';
@@ -239,6 +245,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     MaterialButton(
                       onPressed: () async {
+                        if (!formKey.currentState.validate()) {
+                          return;
+                        }
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return HomeScreen();
