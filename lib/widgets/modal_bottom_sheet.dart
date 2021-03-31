@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loincoin/widgets/buy_coin.dart';
+import 'package:loincoin/widgets/sell_coin.dart';
+import 'package:loincoin/widgets/send_coin.dart';
 
 void sellModalBottomSheet(context) {
   showModalBottomSheet(
@@ -11,7 +16,7 @@ void sellModalBottomSheet(context) {
       builder: (BuildContext bc) {
         return Container(
           padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-          height: MediaQuery.of(context).size.height - 50,
+          height: MediaQuery.of(context).size.height - 200,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -44,31 +49,7 @@ void sellModalBottomSheet(context) {
                 height: 20,
               ),
               Expanded(
-                child: Container(),
-              ),
-              MaterialButton(
-                onPressed: () => null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Container(
-                  width: 270,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xFFF4325C), Color(0xFF0A1634)],
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Sell',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                        fontSize: 14),
-                  ),
-                ),
+                child: SellCoin(),
               )
             ],
           ),
@@ -87,7 +68,7 @@ void buyModalBottomSheet(context) {
       builder: (BuildContext bc) {
         return Container(
           padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-          height: MediaQuery.of(context).size.height - 50,
+          height: MediaQuery.of(context).size.height - 200,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -122,31 +103,7 @@ void buyModalBottomSheet(context) {
                 height: 20,
               ),
               Expanded(
-                child: Container(),
-              ),
-              MaterialButton(
-                onPressed: () => null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Container(
-                  width: 270,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xFFF4325C), Color(0xFF0A1634)],
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Buy',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                        fontSize: 14),
-                  ),
-                ),
+                child: BuyCoin(),
               )
             ],
           ),
@@ -243,7 +200,7 @@ void sendModalBottomSheet(context) {
       builder: (BuildContext bc) {
         return Container(
           padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-          height: MediaQuery.of(context).size.height - 50,
+          height: MediaQuery.of(context).size.height - 200,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -278,31 +235,7 @@ void sendModalBottomSheet(context) {
                 height: 20,
               ),
               Expanded(
-                child: Container(),
-              ),
-              MaterialButton(
-                onPressed: () => null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Container(
-                  width: 270,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    gradient: LinearGradient(
-                      colors: <Color>[Color(0xFFF4325C), Color(0xFF0A1634)],
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Send',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                        fontSize: 14),
-                  ),
-                ),
+                child: SendCoin(),
               )
             ],
           ),
@@ -310,7 +243,7 @@ void sendModalBottomSheet(context) {
       });
 }
 
-void depositModalBottomSheet(context) {
+void depositModalBottomSheet(context, String acctNo, String fullname) {
   showModalBottomSheet(
       backgroundColor: Theme.of(context).backgroundColor,
       shape: RoundedRectangleBorder(
@@ -356,10 +289,37 @@ void depositModalBottomSheet(context) {
                 height: 20,
               ),
               Expanded(
-                child: Container(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(acctNo ?? "0000000000",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(fontSize: 48)),
+                    Text(
+                      fullname,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(fontSize: 24),
+                    ),
+                  ],
+                ),
               ),
               MaterialButton(
-                onPressed: () => null,
+                onPressed: () {
+                  Clipboard.setData(
+                      ClipboardData(text: acctNo ?? "0000000000"));
+                  Fluttertoast.showToast(
+                      msg: acctNo ?? "0000000000",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.grey,
+                      textColor: Colors.black,
+                      fontSize: 16.0);
+                },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),

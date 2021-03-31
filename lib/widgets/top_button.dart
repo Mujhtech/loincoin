@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:loincoin/widgets/modal_bottom_sheet.dart';
+import 'package:loincoin/widgets/dialog_box.dart';
 
 class TopBtn extends StatelessWidget {
+  final String acctNumber;
+  final String fullname;
+  TopBtn({this.acctNumber, this.fullname});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -10,7 +14,7 @@ class TopBtn extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () => depositModalBottomSheet(context),
+            onTap: () => depositModalBottomSheet(context, acctNumber, fullname),
             child: Container(
               width: 100,
               height: 60,
@@ -29,7 +33,7 @@ class TopBtn extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () => withdrawModalBottomSheet(context),
+            onTap: () => comingSoonShowDialog(context),
             child: Container(
               width: 100,
               height: 60,

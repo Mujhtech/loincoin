@@ -4,21 +4,36 @@ import 'package:loincoin/widgets/top_button.dart';
 import 'package:loincoin/widgets/user_profile_image.dart';
 import 'package:loincoin/widgets/user_balance.dart';
 import 'package:loincoin/widgets/transaction_card.dart';
-import 'package:loincoin/constants.dart';
+import 'package:provider/provider.dart';
+import 'package:loincoin/controllers/providers/user.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserStateNotifier>(context);
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.logout,
-          color: Theme.of(context).iconTheme.color,
-          size: 20,
+        leading: IconButton(
+          onPressed: () async {
+            if (!await user.logout()) {
+              return;
+            }
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.logout,
+            color: Theme.of(context).iconTheme.color,
+            size: 20,
+          ),
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         centerTitle: true,
-        title: Text('Mujeeb',
+        title: Text(user.user.username,
             style: Theme.of(context)
                 .textTheme
                 .headline6
@@ -44,15 +59,21 @@ class HomeScreen extends StatelessWidget {
         ListView(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 120.0),
           children: [
-            UserBalance(),
-            TopBtn(),
+            UserBalance(
+              lcAmount: user.user.coinAmount,
+              ngAmount: user.user.ngAmount,
+            ),
+            TopBtn(
+              acctNumber: user.user.acctNumber,
+              fullname: user.user.fullname,
+            ),
             const SizedBox(height: 12.0),
             Text(
               'Transactions',
               style:
                   Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
             ),
-            ...transactionList.map((e) => TransactionCard(data: e)),
+            ...user.transactions.map((e) => TransactionCard(data: e)),
           ],
         ),
         Positioned(

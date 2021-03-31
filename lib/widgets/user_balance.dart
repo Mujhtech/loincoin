@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class UserBalance extends StatelessWidget {
+  final double ngAmount;
+  final double lcAmount;
+  UserBalance({this.lcAmount, this.ngAmount});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +33,7 @@ class UserBalance extends StatelessWidget {
                 ),
                 Flexible(
                   child: Text(
-                    '400LC',
+                    '${lcAmount}LC',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
@@ -39,7 +42,7 @@ class UserBalance extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  child: Text("NGN 404",
+                  child: Text("NGN $ngAmount",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1

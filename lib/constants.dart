@@ -1,6 +1,8 @@
 import 'package:loincoin/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum SystemTheme { System, Dark, Light }
+
 class Constants {
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   static String appName = "Loincoin";

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loincoin/controllers/providers/user.dart';
 import 'package:loincoin/screens/signup.dart';
 import 'package:loincoin/screens/home.dart';
+import 'package:loincoin/widgets/loading.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -15,6 +19,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<UserStateNotifier>(context);
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
@@ -98,7 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 color: Colors.white70,
                                 fontSize: 14,
                                 fontFamily: 'Poppins'),
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Colors.transparent),
@@ -121,7 +126,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               errorBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: Colors.transparent)),
-                              errorStyle: TextStyle(color: Colors.white70),
+                              errorStyle: Theme.of(context).textTheme.bodyText1,
                               fillColor: Color(0xFF232835),
                               filled: true,
                             ),
@@ -186,7 +191,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 errorBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.transparent)),
-                                errorStyle: TextStyle(color: Colors.white70),
+                                errorStyle:
+                                    Theme.of(context).textTheme.bodyText1,
                                 suffixIcon: GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -224,15 +230,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       children: <Widget>[
                         InkWell(
                           onTap: () {},
-                          child: Text(
-                            'Forget password?',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                          child: Text('Forget password?',
+                              style: Theme.of(context).textTheme.bodyText1),
                         )
                       ],
                     ),
@@ -243,41 +242,56 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     SizedBox(
                       height: 70,
                     ),
-                    MaterialButton(
-                      onPressed: () async {
-                        if (!formKey.currentState.validate()) {
-                          return;
-                        }
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return HomeScreen();
-                        }));
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Container(
-                        width: 260,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              Color(0xFFF4325C),
-                              Color(0xFF0A1634)
-                            ],
+                    auth.isLoading
+                        ? Loading()
+                        : MaterialButton(
+                            onPressed: () async {
+                              if (!formKey.currentState.validate()) {
+                                return;
+                              }
+                              if (!await auth.login(
+                                  username.text.trim(), password.text.trim())) {
+                                Fluttertoast.showToast(
+                                    msg: auth.errorMessage,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.grey,
+                                    textColor: Colors.black,
+                                    fontSize: 16.0);
+                                return;
+                              }
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return HomeScreen();
+                              }));
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              width: 270,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30.0)),
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    Color(0xFFF4325C),
+                                    Color(0xFF0A1634)
+                                  ],
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Poppins',
+                                    fontSize: 14),
+                              ),
+                            ),
                           ),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                              fontSize: 14),
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       height: 20,
                     ),

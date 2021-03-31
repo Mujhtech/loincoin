@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:loincoin/constants.dart';
 
 class Api {
-  static const baseUrl = 'https://loincoin.org/api';
+  static const baseUrl = 'http://loincoin.org/api';
   final client = http.Client();
 
   Future<Map<String, dynamic>> login(String username, String password) async {
@@ -17,31 +17,36 @@ class Api {
     };
     final res = await client.post(url,
         headers: jsonHeader,
-        body: {'username': '$username', 'password': '$password'});
+        body: json.encode({'username': '$username', 'password': '$password'}));
     final data = json.decode(res.body);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
-    prefs.setString("token", data['data']['token']);
-    return data["data"];
+    prefs.setString("token", data['access_token']);
+    return data;
   }
 
   Future<Map<String, dynamic>> register(String username, String fullname,
-      String referral, String mobile, String email, String password) async {
+      String mobile, String email, String password,
+      [String referral = "Mujhtech"]) async {
     final url = Uri.parse('$baseUrl/auth/register');
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
     };
-    final res = await client.post(url, headers: jsonHeader, body: {
+    Map<String, String> body = {
       'username': '$username',
       'fullname': '$fullname',
       'email': '$email',
       'mobile': '$mobile',
       'referral': '$referral',
       'password': '$password'
-    });
+    };
+    print(json.encode(body));
+    final res =
+        await client.post(url, headers: jsonHeader, body: json.encode(body));
     final data = json.decode(res.body);
+    print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -55,32 +60,31 @@ class Api {
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${prefs.getInt('token')}"
+      "Authorization": "Bearer ${prefs.getString('token')}"
     };
     final res = await client.get(url, headers: jsonHeader);
     final data = json.decode(res.body);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
-
-    return data["data"];
+    return data;
   }
 
-  Future<Map<String, dynamic>> logout() async {
+  Future<bool> logout() async {
     final SharedPreferences prefs = await Constants().prefs;
-    final url = Uri.parse('$baseUrl/auth/profile');
+    final url = Uri.parse('$baseUrl/auth/logout');
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${prefs.getInt('token')}"
+      "Authorization": "Bearer ${prefs.getString('token')}"
     };
     final res = await client.get(url, headers: jsonHeader);
     final data = json.decode(res.body);
+    print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
-
-    return data["data"];
+    return true;
   }
 
   Future<Map<String, dynamic>> send(String address, double amount) async {
@@ -89,13 +93,15 @@ class Api {
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${prefs.getInt('token')}"
+      "Authorization": "Bearer ${prefs.getString('token')}"
     };
-    final res = await client.post(url, headers: jsonHeader, body: {
-      'address': '$address',
-      'amount': '$amount',
-      'wallet_type': 'interest_wallet'
-    });
+    final res = await client.post(url,
+        headers: jsonHeader,
+        body: json.encode({
+          'address': '$address',
+          'amount': '$amount',
+          'wallet_type': 'interest_wallet'
+        }));
     final data = json.decode(res.body);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
@@ -110,13 +116,15 @@ class Api {
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${prefs.getInt('token')}"
+      "Authorization": "Bearer ${prefs.getString('token')}"
     };
-    final res = await client.post(url, headers: jsonHeader, body: {
-      'amountlc': '$amountlc',
-      'amountngn': '$amountngn',
-      'wallet_type': 'deposit_wallet'
-    });
+    final res = await client.post(url,
+        headers: jsonHeader,
+        body: json.encode({
+          'amountlc': '$amountlc',
+          'amountngn': '$amountngn',
+          'wallet_type': 'deposit_wallet'
+        }));
     final data = json.decode(res.body);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
@@ -131,13 +139,15 @@ class Api {
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${prefs.getInt('token')}"
+      "Authorization": "Bearer ${prefs.getString('token')}"
     };
-    final res = await client.post(url, headers: jsonHeader, body: {
-      'amountlc': '$amountlc',
-      'amountngn': '$amountngn',
-      'wallet_type': 'interest_wallet'
-    });
+    final res = await client.post(url,
+        headers: jsonHeader,
+        body: json.encode({
+          'amountlc': '$amountlc',
+          'amountngn': '$amountngn',
+          'wallet_type': 'interest_wallet'
+        }));
     final data = json.decode(res.body);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
@@ -152,11 +162,12 @@ class Api {
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${prefs.getInt('token')}"
+      "Authorization": "Bearer ${prefs.getString('token')}"
     };
     final res = await client.post(url,
         headers: jsonHeader,
-        body: {'amount': '$amount', 'wallet_type': 'deposit_wallet'});
+        body: json
+            .encode({'amount': '$amount', 'wallet_type': 'deposit_wallet'}));
     final data = json.decode(res.body);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
