@@ -2,17 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:loincoin/controllers/api.dart';
 import 'package:loincoin/models/transaction.dart';
 import 'package:loincoin/models/user.dart';
+import 'package:loincoin/models/setting.dart';
 
 class UserStateNotifier extends ChangeNotifier {
   //
   bool isLoading = false;
   String errorMessage;
   User user;
+  Settings settings;
   List<Transaction> transactions = [];
   Transaction transaction;
   Api api = Api();
 
-  UserStateNotifier();
+  UserStateNotifier() {
+    fetchSetting();
+  }
+
+  Future<bool> fetchSetting() async {
+    try {
+      final result = await api.setting();
+      settings = Settings.fromJson(result);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 
   Future<bool> login(String username, String password) async {
     try {
@@ -52,11 +68,15 @@ class UserStateNotifier extends ChangeNotifier {
 
   Future<bool> sendCoin(String address, double amount) async {
     try {
+      isLoading = true;
+      notifyListeners();
       await api.send(address, amount);
       await profile();
+      isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
+      isLoading = false;
       errorMessage = e.toString();
       notifyListeners();
       return false;
@@ -65,11 +85,15 @@ class UserStateNotifier extends ChangeNotifier {
 
   Future<bool> sellCoin(double amountlc, double amountng) async {
     try {
+      isLoading = true;
+      notifyListeners();
       await api.sell(amountng, amountlc);
       await profile();
+      isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
+      isLoading = false;
       errorMessage = e.toString();
       notifyListeners();
       return false;
@@ -78,11 +102,15 @@ class UserStateNotifier extends ChangeNotifier {
 
   Future<bool> buyCoin(double amountlc, double amountng) async {
     try {
+      isLoading = true;
+      notifyListeners();
       await api.buy(amountng, amountlc);
       await profile();
+      isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
+      isLoading = false;
       errorMessage = e.toString();
       notifyListeners();
       return false;

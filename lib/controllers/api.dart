@@ -8,6 +8,23 @@ class Api {
   static const baseUrl = 'http://loincoin.org/api';
   final client = http.Client();
 
+  Future<Map<String, dynamic>> setting() async {
+    final url = Uri.parse('$baseUrl/setting');
+    Map<String, String> jsonHeader = {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    };
+    final res = await client.get(
+      url,
+      headers: jsonHeader,
+    );
+    final data = json.decode(res.body);
+    if (res.statusCode != 200) {
+      throw HTTPException(res.statusCode, data["message"]);
+    }
+    return data['setting'];
+  }
+
   Future<Map<String, dynamic>> login(String username, String password) async {
     final url = Uri.parse('$baseUrl/auth/login');
     final SharedPreferences prefs = await Constants().prefs;
@@ -73,6 +90,7 @@ class Api {
   Future<bool> logout() async {
     final SharedPreferences prefs = await Constants().prefs;
     final url = Uri.parse('$baseUrl/auth/logout');
+    print(prefs.getString('token'));
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -90,6 +108,7 @@ class Api {
   Future<Map<String, dynamic>> send(String address, double amount) async {
     final SharedPreferences prefs = await Constants().prefs;
     final url = Uri.parse('$baseUrl/send');
+    print(prefs.getString('token'));
     Map<String, String> jsonHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -100,9 +119,10 @@ class Api {
         body: json.encode({
           'address': '$address',
           'amount': '$amount',
-          'wallet_type': 'interest_wallet'
+          'wallet_type': 'jsdj'
         }));
     final data = json.decode(res.body);
+    print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }

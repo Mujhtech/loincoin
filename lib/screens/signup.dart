@@ -511,10 +511,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                   backgroundColor: Colors.grey,
                                   textColor: Colors.black,
                                   fontSize: 16.0);
-                              //Navigator.push(context,
-                              //MaterialPageRoute(builder: (context) {
-                              //return WelcomeScreen();
-                              //}));
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return WelcomeScreen();
+                              }));
                             },
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loincoin/widgets/bottom_button.dart';
+import 'package:loincoin/widgets/modal_bottom_sheet.dart';
 import 'package:loincoin/widgets/top_button.dart';
 import 'package:loincoin/widgets/user_profile_image.dart';
 import 'package:loincoin/widgets/user_balance.dart';
@@ -46,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
             size: 20,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              walletAddressModalBottomSheet(context, user.user.address);
+            },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 10.0, 20.0, 10.0),
               child: UserProfileImage(
