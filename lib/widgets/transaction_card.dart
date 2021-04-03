@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loincoin/constants.dart';
 import 'package:loincoin/models/transaction.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -20,20 +21,18 @@ class TransactionCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                data.details,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(fontSize: 16),
+              getTransactionIcon(data.type),
+              Flexible(
+                child: Text(
+                  data.details,
+                  overflow: TextOverflow.visible,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(fontSize: 16),
+                ),
               ),
-              Text(
-                data.type == "+"
-                    ? "+ ${data.amount} LC"
-                    : "- ${data.amount} LC",
-                style: TextStyle(
-                    color: data.type == "+" ? Colors.green : Colors.red),
-              )
+              getTransactionAmount(data.type, data.wallettype, data.amount)
             ],
           ),
         ),

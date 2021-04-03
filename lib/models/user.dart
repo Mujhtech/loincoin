@@ -20,7 +20,7 @@ class User {
         address: data['wallet_address'],
         acctNumber: data['acct_no'],
         fullname: data['firstname'] + ' ' + data['lastname'],
-        coinAmount: double.parse(data['deposit_wallet']),
-        ngAmount: double.parse(data['interest_wallet']));
+        coinAmount: double.parse(data['interest_wallet']),
+        ngAmount: double.parse(data['deposit_wallet']));
   }
 }

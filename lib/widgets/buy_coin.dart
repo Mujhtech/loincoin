@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loincoin/controllers/providers/user.dart';
 import 'package:loincoin/widgets/loading.dart';
@@ -47,7 +48,18 @@ class _BuyCoinState extends State<BuyCoin> {
                         else
                           return null;
                       },
-                      onChanged: (v) {},
+                      onChanged: (v) {
+                        if (v.trim() != "" || v != null) {
+                          var total =
+                              double.parse(v.trim()) * user.settings.curRate;
+                          amountng.text = total.toString();
+                        }
+                      },
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]+')),
+                        new LengthLimitingTextInputFormatter(11),
+                      ],
                       style: TextStyle(
                           color: Colors.white70,
                           fontSize: 14,
@@ -107,7 +119,18 @@ class _BuyCoinState extends State<BuyCoin> {
                         else
                           return null;
                       },
-                      onChanged: (v) {},
+                      onChanged: (v) {
+                        if (v.trim() != "" || v != null) {
+                          var total =
+                              double.parse(v.trim()) / user.settings.curRate;
+                          amountlc.text = total.toString();
+                        }
+                      },
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]+')),
+                        new LengthLimitingTextInputFormatter(11),
+                      ],
                       style: TextStyle(
                           color: Colors.white70,
                           fontSize: 14,

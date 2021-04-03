@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:loincoin/constants.dart';
 
 class Api {
-  static const baseUrl = 'http://loincoin.org/api';
+  static const baseUrl = 'https://loincoin.org/api';
   final client = http.Client();
 
   Future<Map<String, dynamic>> setting() async {
@@ -81,6 +81,7 @@ class Api {
     };
     final res = await client.get(url, headers: jsonHeader);
     final data = json.decode(res.body);
+    print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -119,7 +120,7 @@ class Api {
         body: json.encode({
           'address': '$address',
           'amount': '$amount',
-          'wallet_type': 'jsdj'
+          'wallet_type': 'interest_wallet'
         }));
     final data = json.decode(res.body);
     print(data);
@@ -141,11 +142,12 @@ class Api {
     final res = await client.post(url,
         headers: jsonHeader,
         body: json.encode({
-          'amountlc': '$amountlc',
-          'amountngn': '$amountngn',
+          'amountlc': '${amountlc.toStringAsFixed(2)}',
+          'amountngn': '${amountngn.toStringAsFixed(2)}',
           'wallet_type': 'deposit_wallet'
         }));
     final data = json.decode(res.body);
+    print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -164,8 +166,8 @@ class Api {
     final res = await client.post(url,
         headers: jsonHeader,
         body: json.encode({
-          'amountlc': '$amountlc',
-          'amountngn': '$amountngn',
+          'amountlc': '${amountlc.toStringAsFixed(2)}',
+          'amountngn': '${amountngn.toStringAsFixed(2)}',
           'wallet_type': 'interest_wallet'
         }));
     final data = json.decode(res.body);

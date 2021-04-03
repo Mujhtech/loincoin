@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loincoin/constants.dart';
 import 'package:loincoin/widgets/bottom_button.dart';
+import 'package:loincoin/widgets/dialog_box.dart';
 import 'package:loincoin/widgets/modal_bottom_sheet.dart';
 import 'package:loincoin/widgets/top_button.dart';
 import 'package:loincoin/widgets/user_profile_image.dart';
@@ -7,6 +9,7 @@ import 'package:loincoin/widgets/user_balance.dart';
 import 'package:loincoin/widgets/transaction_card.dart';
 import 'package:provider/provider.dart';
 import 'package:loincoin/controllers/providers/user.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,6 +17,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int slideIndex = 0;
+  PageController controller = new PageController(initialPage: 0);
+
+  Widget _buildPageIndicator(bool isCurrentPage) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 2.0),
+      height: isCurrentPage ? 10.0 : 6.0,
+      width: isCurrentPage ? 35.0 : 6.0,
+      decoration: BoxDecoration(
+        color: isCurrentPage ? Color(0xFFF7BD38) : Color(0xFFC4C4C4),
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserStateNotifier>(context);
@@ -62,10 +86,45 @@ class _HomeScreenState extends State<HomeScreen> {
         ListView(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 120.0),
           children: [
-            UserBalance(
-              lcAmount: user.user.coinAmount,
-              ngAmount: user.user.ngAmount,
+            Container(
+              height: MediaQuery.of(context).size.width * 0.4,
+              child: PageView(
+                controller: controller,
+                onPageChanged: (index) {
+                  setState(() {
+                    slideIndex = index;
+                  });
+                },
+                children: <Widget>[
+                  UserBalance(
+                    type: true,
+                    lcAmount: user.user.coinAmount,
+                    ngAmount: user.user.ngAmount,
+                    rate: user.settings.curRate,
+                  ),
+                  UserBalance(
+                    type: false,
+                    lcAmount: user.user.coinAmount,
+                    ngAmount: user.user.ngAmount,
+                  ),
+                ],
+              ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(
+                child: Row(
+                  children: [
+                    for (int i = 0; i < 2; i++)
+                      i == slideIndex
+                          ? _buildPageIndicator(true)
+                          : _buildPageIndicator(false),
+                  ],
+                ),
+              )
+            ]),
             TopBtn(
               acctNumber: user.user.acctNumber,
               fullname: user.user.fullname,
@@ -76,7 +135,61 @@ class _HomeScreenState extends State<HomeScreen> {
               style:
                   Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
             ),
-            ...user.transactions.map((e) => TransactionCard(data: e)),
+            ...user.transactions.map((e) => GestureDetector(
+                onTap: () => trxShowDialog(context, e.id),
+                child: TransactionCard(data: e))),
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100],
+              enabled: user.transactionLoading,
+              child: ListView.builder(
+                itemBuilder: (_, __) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 48.0,
+                        height: 48.0,
+                        color: Colors.white,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              height: 8.0,
+                              color: Colors.white,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.0),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 8.0,
+                              color: Colors.white,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.0),
+                            ),
+                            Container(
+                              width: 40.0,
+                              height: 8.0,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                itemCount: transactionList.length,
+              ),
+            ),
           ],
         ),
         Positioned(

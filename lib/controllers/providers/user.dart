@@ -7,6 +7,7 @@ import 'package:loincoin/models/setting.dart';
 class UserStateNotifier extends ChangeNotifier {
   //
   bool isLoading = false;
+  bool transactionLoading = true;
   String errorMessage;
   User user;
   Settings settings;
@@ -120,7 +121,7 @@ class UserStateNotifier extends ChangeNotifier {
   Future<bool> profile() async {
     try {
       final result = await api.profile();
-      user = User.fromJson(result['user']);
+      user = User.fromJson(result['data']);
       transactions =
           result['transaction'] != null ? Transaction.fromJson(result) : [];
       notifyListeners();

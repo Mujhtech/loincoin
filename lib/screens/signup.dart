@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loincoin/controllers/providers/user.dart';
 import 'package:loincoin/screens/welcome.dart';
@@ -347,6 +348,12 @@ class _SignupScreenState extends State<SignupScreen> {
                               else
                                 return null;
                             },
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9.,]+')),
+                              new LengthLimitingTextInputFormatter(11),
+                            ],
                             onChanged: (v) {},
                             style: TextStyle(
                                 color: Colors.white70,
@@ -368,7 +375,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       color: Colors.transparent, width: 0),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10))),
-                              hintText: '+2347000',
+                              hintText: '07000',
                               hintStyle: TextStyle(
                                 color: Colors.white70,
                               ),

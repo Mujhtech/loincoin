@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loincoin/controllers/providers/user.dart';
 import 'package:loincoin/widgets/loading.dart';
@@ -107,6 +108,11 @@ class _SendCoinState extends State<SendCoin> {
                         else
                           return null;
                       },
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9.,]+')),
+                        new LengthLimitingTextInputFormatter(11),
+                      ],
                       onChanged: (v) {},
                       style: TextStyle(
                           color: Colors.white70,
