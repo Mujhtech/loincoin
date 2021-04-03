@@ -63,7 +63,7 @@ class Api {
     final res =
         await client.post(url, headers: jsonHeader, body: json.encode(body));
     final data = json.decode(res.body);
-    print(data);
+    //print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -81,7 +81,7 @@ class Api {
     };
     final res = await client.get(url, headers: jsonHeader);
     final data = json.decode(res.body);
-    print(data);
+    //print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -99,7 +99,7 @@ class Api {
     };
     final res = await client.get(url, headers: jsonHeader);
     final data = json.decode(res.body);
-    print(data);
+    //print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -123,7 +123,7 @@ class Api {
           'wallet_type': 'interest_wallet'
         }));
     final data = json.decode(res.body);
-    print(data);
+    //print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }
@@ -147,7 +147,7 @@ class Api {
           'wallet_type': 'deposit_wallet'
         }));
     final data = json.decode(res.body);
-    print(data);
+    //print(data);
     if (res.statusCode != 200) {
       throw HTTPException(res.statusCode, data["message"]);
     }

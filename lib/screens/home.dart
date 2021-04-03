@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loincoin/constants.dart';
 import 'package:loincoin/widgets/bottom_button.dart';
 import 'package:loincoin/widgets/dialog_box.dart';
 import 'package:loincoin/widgets/modal_bottom_sheet.dart';
@@ -9,7 +8,6 @@ import 'package:loincoin/widgets/user_balance.dart';
 import 'package:loincoin/widgets/transaction_card.dart';
 import 'package:provider/provider.dart';
 import 'package:loincoin/controllers/providers/user.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -65,11 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 .copyWith(fontWeight: FontWeight.w600)),
         elevation: 0,
         actions: [
-          Icon(
-            Icons.settings,
-            color: Theme.of(context).iconTheme.color,
-            size: 20,
-          ),
+          //Icon(
+          //Icons.settings,
+          //color: Theme.of(context).iconTheme.color,
+          //size: 20,
+          //),
           GestureDetector(
             onTap: () {
               walletAddressModalBottomSheet(context, user.user.address);
@@ -138,58 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ...user.transactions.map((e) => GestureDetector(
                 onTap: () => trxShowDialog(context, e.id),
                 child: TransactionCard(data: e))),
-            Shimmer.fromColors(
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.grey[100],
-              enabled: user.transactionLoading,
-              child: ListView.builder(
-                itemBuilder: (_, __) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 48.0,
-                        height: 48.0,
-                        color: Colors.white,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              width: double.infinity,
-                              height: 8.0,
-                              color: Colors.white,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.0),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 8.0,
-                              color: Colors.white,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.0),
-                            ),
-                            Container(
-                              width: 40.0,
-                              height: 8.0,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                itemCount: transactionList.length,
-              ),
-            ),
           ],
         ),
         Positioned(
